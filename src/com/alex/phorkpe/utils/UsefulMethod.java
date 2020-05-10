@@ -350,7 +350,7 @@ public class UsefulMethod
 			try
 				{
 				String[] tab = inputLine.split(UsefulMethod.getTargetOption("csvsplitter"));
-				Device device = new Device(tab[0], UsefulMethod.getKeyPressProfile(tab[1]));
+				Device device = new Device(tab[0], UsefulMethod.getKeyPressProfile(tab[1]), tab[2], tab[3], Integer.parseInt(tab[4]));
 				
 				/**
 				 * We check for duplicates
