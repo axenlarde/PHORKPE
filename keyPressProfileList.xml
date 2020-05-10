@@ -1,0 +1,49 @@
+<!--
+PHORKPE Key press profile list
+
+Priority : 
+- 0: Execute Immediately 
+- 1: Execute When Idle
+- 2: Execute If Idle otherwise, it does not get executed
+
+<CiscoIPPhoneExecute>
+	<ExecuteItem Priority=”0” URL=”Play:chime.raw”/>
+</CiscoIPPhoneExecute>
+
+Key : See the documentation for the whole key list
+Settings, KeyPad4, KeyPadPound, KeyPadStar, Soft2, Feature1, Line1, NavDwn, Etc.
+-->
+
+
+<xml>
+	<profiles>
+		<profile>
+			<name>securityReset6941</name>
+			<priority>1</priority>
+			<defaultintercommandtimer>500</defaultintercommandtimer>
+			<tosend>
+				<key>Key:Settings</key>
+				<wait></wait>
+				<key>Key:KeyPad4</key>
+				<key>Key:KeyPad5</key>
+				<key>Key:KeyPad2</key>
+				<key>Key:Soft4</key>
+				<key>Key:Soft2</key>
+			</tosend>
+		</profile>
+		<profile>
+			<name>securityReset79XX</name>
+			<priority>1</priority>
+			<defaultintercommandtimer>500</defaultintercommandtimer>
+			<tosend>
+				<key>Key:Settings</key>
+				<wait></wait>
+				<key>Key:KeyPad4</key>
+				<key>Key:KeyPad5</key>
+				<key>Key:KeyPad2</key>
+				<key>Key:Soft4</key>
+				<key>Key:Soft2</key>
+			</tosend>
+		</profile>
+	</profiles>
+</xml>

@@ -1,0 +1,16 @@
+﻿<!--
+PHORKPE Overal configuration file
+-->
+
+<xml>
+	<config>
+		<!--Misc-->
+		<log4j>DEBUG</log4j><!--Logging level : ERROR,INFO,DEBUG-->
+		<splitter>+</splitter>
+		<csvsplitter>;</csvsplitter>
+		<pingtimeout>5000</pingtimeout><!--used when trying to reach a device--><!--In millisecond-->
+		<maxdevicethread>1</maxdevicethread>
+		<maxthread>10</maxthread>
+		<requesttimeout>10000</requesttimeout>
+	</config>
+</xml>
