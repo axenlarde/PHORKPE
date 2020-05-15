@@ -26,7 +26,7 @@ public class KeyPress
 			{
 			try
 				{
-				Long.parseLong(key);//We do that just to check that a correct waiting time has been provided
+				Integer.parseInt(this.key);//We do that just to check that a correct waiting time has been provided
 				}
 			catch(Exception e)
 				{

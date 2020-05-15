@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+import com.alex.phorkpe.action.SendKey.SendMethod;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.utils.UsefulMethod;
 import com.alex.phorkpe.utils.Variables;
@@ -56,6 +57,8 @@ public class Action extends Thread
 			 * We feed the Thread Manager then start it
 			 */
 			ArrayList<Thread> keyPressThreadList = new ArrayList<Thread>();
+			SendMethod method = SendMethod.valueOf(UsefulMethod.getTargetOption("sendmethod"));
+			
 			for(Device d : Variables.getDeviceList())
 				{
 				if((d.getStatus().equals(statusType.error)) || (d.getStatus().equals(statusType.disabled)))
@@ -64,12 +67,14 @@ public class Action extends Thread
 					}
 				else
 					{
-					keyPressThreadList.add(new SendKey(d));
+					if(method.equals(SendMethod.jtapi))keyPressThreadList.add(new SendKeyJTAPI(d));
+					else keyPressThreadList.add(new SendKeyHTTP(d));//Default HTTP
 					}
 				}
+			
 			ThreadManager KPTM = new ThreadManager(Integer.parseInt(UsefulMethod.getTargetOption("maxthread")), 100, keyPressThreadList);
 			KPTM.start();
-			Variables.getLogger().debug("Thread Manager started !");
+			Variables.getLogger().debug("Thread Manager starts !");
 			
 			/**
 			 * We wait till the ThreadManager ends
@@ -79,14 +84,19 @@ public class Action extends Thread
 				this.sleep(100);
 				}
 			
-			Variables.getLogger().debug("Thread Manager ended !");
+			Variables.getLogger().debug("Thread Manager ends !");
+			
+			/**
+			 * We eventually shut down the JTAPI connection
+			 */
+			if(Variables.getJtapiConnection() != null)Variables.getJtapiConnection().disconnect();
 			
 			/**
 			 * We finish by writing the result file
 			 */
 			Variables.getLogger().debug("Writing the result file");
 			String splitter = UsefulMethod.getTargetOption("csvsplitter");
-			String firstLine = "IP;KeyPressProfile;Status;Description\r\n";
+			String firstLine = "Device IP;Device Name;KeyPressProfile;Status;Description\r\n";
 			
 			BufferedWriter buffReport = new BufferedWriter(new FileWriter(new File(Variables.getMainDirectory()+"/"+Variables.getResultFileName()), false));
 			buffReport.write(firstLine);
@@ -95,6 +105,7 @@ public class Action extends Thread
 				if((d.getStatus().equals(statusType.error)) || (d.getStatus().equals(statusType.disabled)))
 					{
 					buffReport.write(d.getIp()+splitter+
+							d.getName()+splitter+
 							d.getKeyPressProfile().getName()+splitter+
 							d.getStatus().name()+splitter+
 							d.getStatusDesc()+"\r\n");
@@ -105,6 +116,7 @@ public class Action extends Thread
 			
 			Variables.getLogger().debug("Result file written with success !");
 			Variables.getLogger().debug("END");
+			System.exit(0);
 			}
 		catch (Exception e)
 			{

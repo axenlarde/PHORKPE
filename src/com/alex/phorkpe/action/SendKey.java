@@ -1,13 +1,9 @@
 package com.alex.phorkpe.action;
 
-import java.util.regex.Pattern;
 
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.misc.KeyPress;
 import com.alex.phorkpe.misc.KeyPress.KeyType;
-import com.alex.phorkpe.utils.RESTGear;
-import com.alex.phorkpe.utils.RESTGear.requestType;
-import com.alex.phorkpe.utils.UsefulMethod;
 import com.alex.phorkpe.utils.Variables.statusType;
 import com.alex.phorkpe.utils.Variables;
 
@@ -16,12 +12,18 @@ import com.alex.phorkpe.utils.Variables;
  *
  * @author Alexandre RATEL
  */
-public class SendKey extends Thread
+public abstract class SendKey extends Thread implements SendKeyInt
 	{
 	/**
 	 * Variables
 	 */
-	private Device device;
+	public enum SendMethod
+		{
+		http,
+		jtapi
+		};
+	
+	protected Device device;
 
 	public SendKey(Device device)
 		{
@@ -31,48 +33,51 @@ public class SendKey extends Thread
 	
 	public void run()
 		{
-		Variables.getLogger().debug("Device "+device.getIp()+" press key request started");
-		device.setStatus(statusType.processing);
-		
-		String uri = "http://"+device.getIp()+"/CGI/Execute";
+		Variables.getLogger().debug(device.getInfo()+" : Press key request started");
 		
 		try
 			{
+			device.setStatus(statusType.processing);
+			
 			for(KeyPress kp : device.getKeyPressProfile().getKeyList())
 				{
 				if(kp.getType().equals(KeyType.wait))
 					{
-					this.sleep(Long.parseLong(kp.getKey()));
+					this.sleep(Integer.parseInt(kp.getKey()));
 					}
 				else
 					{
-					String content = "XML=<CiscoIPPhoneExecute>"
-						+ "	<ExecuteItem Priority=\""+device.getKeyPressProfile().getPriority()+"\" URL=\"Key:"+kp.getKey()+"\"/>"
-						+ "</CiscoIPPhoneExecute>";
+					String content = buildKeyPressRequest(device, kp);
 					
-					content = UsefulMethod.escapeHTML(content);
-					
-					String reply = RESTGear.httpSend(requestType.POST, uri, content, device.getUser(), device.getPassword(), "text/xml", device.getTimeout());
-					
-					if(Pattern.matches(".*Success.*", reply))
-						{
-						device.setStatus(statusType.done);
-						Variables.getLogger().debug("Device "+device.getIp()+" key sent !");
-						}
-					else
-						{
-						Variables.getLogger().debug("Device "+device.getIp()+" key sent with error : "+reply);
-						throw new Exception(reply);
-						}
+					send(content);//Sending the request
+					device.setStatus(statusType.done);
+					Variables.getLogger().debug(device.getInfo()+" : Key '"+kp.getKey()+"' sent with success !");
 					}
+				
+				this.sleep(device.getKeyPressProfile().getDefaultInterCommandTimer());
 				}
 			}
 		catch (Exception e)
 			{
-			Variables.getLogger().error(device.getIp()+" : ERROR while sending keys, aborting : "+e.getMessage(),e);
+			Variables.getLogger().error(device.getInfo()+" : ERROR while sending keys, aborting : "+e.getMessage(),e);
 			device.setStatusDesc(e.getMessage());
 			device.setStatus(statusType.error);
 			}
+		}
+	
+	/**
+	 * Build the request to send
+	 */
+	protected String buildKeyPressRequest(Device device, KeyPress kp)
+		{
+		String content = "XML=<CiscoIPPhoneExecute>"
+						+ "	<ExecuteItem Priority=\""+device.getKeyPressProfile().getPriority()+"\" URL=\"Key:"+kp.getKey()+"\"/>"
+						+ "</CiscoIPPhoneExecute>";
+					
+		//content = UsefulMethod.escapeHTML(content);
+		//content = UsefulMethod.convertEncodeType(content);
+		
+		return content;
 		}
 
 	public Device getDevice()

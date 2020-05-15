@@ -22,13 +22,13 @@ Settings, KeyPad4, KeyPadPound, KeyPadStar, Soft2, Feature1, Line1, NavDwn, Etc.
 			<priority>1</priority>
 			<defaultintercommandtimer>500</defaultintercommandtimer>
 			<tosend>
-				<key>Key:Settings</key>
-				<wait></wait>
-				<key>Key:KeyPad4</key>
-				<key>Key:KeyPad5</key>
-				<key>Key:KeyPad2</key>
-				<key>Key:Soft4</key>
-				<key>Key:Soft2</key>
+				<key>Settings</key>
+				<wait>100</wait>
+				<key>KeyPad4</key>
+				<key>KeyPad5</key>
+				<key>KeyPad2</key>
+				<key>Soft4</key>
+				<key>Soft2</key>
 			</tosend>
 		</profile>
 		<profile>
@@ -36,13 +36,23 @@ Settings, KeyPad4, KeyPadPound, KeyPadStar, Soft2, Feature1, Line1, NavDwn, Etc.
 			<priority>1</priority>
 			<defaultintercommandtimer>500</defaultintercommandtimer>
 			<tosend>
-				<key>Key:Settings</key>
-				<wait></wait>
-				<key>Key:KeyPad4</key>
-				<key>Key:KeyPad5</key>
-				<key>Key:KeyPad2</key>
-				<key>Key:Soft4</key>
-				<key>Key:Soft2</key>
+				<key>Settings</key>
+				<wait>100</wait>
+				<key>KeyPad4</key>
+				<key>KeyPad5</key>
+				<key>KeyPad2</key>
+				<key>Soft4</key>
+				<key>Soft2</key>
+			</tosend>
+		</profile>
+		<profile>
+			<name>test</name>
+			<priority>1</priority>
+			<defaultintercommandtimer>100</defaultintercommandtimer>
+			<tosend>
+				<key>Settings</key>
+				<wait>200</wait>
+				<key>KeyPad4</key>
 			</tosend>
 		</profile>
 	</profiles>

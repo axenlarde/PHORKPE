@@ -13,23 +13,25 @@ public class Device
 	/**
 	 * Variables
 	 */
-	private String ip;
+	private String ip, name;
 	private KeyPressProfile keyPressProfile;
 	private statusType status;
-	private String statusDesc, user, password;
-	private int timeout;
+	private String statusDesc;
 	
-	public Device(String ip, KeyPressProfile keyPressProfile, String user, String password, int timeout)
+	public Device(String ip, String name, KeyPressProfile keyPressProfile)
 		{
 		super();
 		this.ip = ip;
+		this.name = name;
 		this.keyPressProfile = keyPressProfile;
-		this.user = user;
-		this.password = password;
-		this.timeout = timeout;
 		this.status = statusType.init;
 		}
 
+	public String getInfo()
+		{
+		return name+" : "+ip;
+		}
+	
 	public String getIp()
 		{
 		return ip;
@@ -60,20 +62,12 @@ public class Device
 		this.statusDesc = statusDesc;
 		}
 
-	public String getUser()
+	public String getName()
 		{
-		return user;
+		return name;
 		}
-
-	public String getPassword()
-		{
-		return password;
-		}
-
-	public int getTimeout()
-		{
-		return timeout;
-		}
+	
+	
 	
 	/*2020*//*RATEL Alexandre 8)*/
 	}

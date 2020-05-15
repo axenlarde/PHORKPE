@@ -350,7 +350,7 @@ public class UsefulMethod
 			try
 				{
 				String[] tab = inputLine.split(UsefulMethod.getTargetOption("csvsplitter"));
-				Device device = new Device(tab[0], UsefulMethod.getKeyPressProfile(tab[1]), tab[2], tab[3], Integer.parseInt(tab[4]));
+				Device device = new Device(tab[0], tab[1], UsefulMethod.getKeyPressProfile(tab[2]));
 				
 				/**
 				 * We check for duplicates
@@ -361,9 +361,9 @@ public class UsefulMethod
 					
 					for(Device d : deviceList)
 						{
-						if(d.getIp().equals(device.getIp()))
+						if(d.getInfo().equals(device.getInfo()))
 							{
-							Variables.getLogger().debug("Duplicate found, do not adding the device line "+index+" : "+tab[0]);
+							Variables.getLogger().debug("Duplicate found, do not adding the device line "+index+" : "+tab[0]+" : "+tab[1]);
 							found = true;
 							break;
 							}
@@ -428,11 +428,10 @@ public class UsefulMethod
 		Variables.getLogger().info("Log level found in the configuration file : "+Variables.getLogger().getLevel().toString());
 		/*************/
 		
-		/************
-		 * Etc...
-		 */
-		//If needed, just write it here
-		/*************/
+		Variables.setUser(UsefulMethod.getTargetOption("senduser"));
+		Variables.setPassword(UsefulMethod.getTargetOption("sendpassword"));
+		Variables.setJTAPIHost(UsefulMethod.getTargetOption("jtapihost"));
+		Variables.setTimeout(Integer.parseInt(UsefulMethod.getTargetOption("sendtimeout")));
 		}
 	
 	/**************
@@ -524,6 +523,23 @@ public class UsefulMethod
 		textToConvert = textToConvert.replaceAll("'", "&apos;");
 		textToConvert = textToConvert.replaceAll("<", "&lt;");
 		textToConvert = textToConvert.replaceAll(">", "&gt;");
+		
+		return textToConvert;
+		}
+	
+	public synchronized static String convertEncodeType(String textToConvert)
+		{
+		textToConvert = textToConvert.replaceAll("\\\n", "%0A");
+		textToConvert = textToConvert.replaceAll("<", "%3C");
+		textToConvert = textToConvert.replaceAll("=", "%3D");
+		textToConvert = textToConvert.replaceAll("\\\"", "%22");
+		textToConvert = textToConvert.replaceAll(":", "%3A");
+		textToConvert = textToConvert.replaceAll("\\.", "%2E");
+		textToConvert = textToConvert.replaceAll(">", "%3E");
+		textToConvert = textToConvert.replaceAll("/", "%2F");
+		textToConvert = textToConvert.replaceAll("\\[", "%5B");
+		textToConvert = textToConvert.replaceAll("\\]", "%5D");
+		textToConvert = textToConvert.replaceAll("!", "%21");
 		
 		return textToConvert;
 		}

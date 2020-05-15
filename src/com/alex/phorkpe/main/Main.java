@@ -76,7 +76,7 @@ public class Main
 		catch(Exception exc)
 			{
 			Variables.getLogger().error(exc.getMessage());
-			Variables.getLogger().setLevel(Level.INFO);
+			Variables.getLogger().setLevel(Level.DEBUG);
 			}
 		/*********************/
 		

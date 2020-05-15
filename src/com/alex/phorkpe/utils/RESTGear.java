@@ -103,7 +103,8 @@ public class RESTGear
 		
 		try
 			{
-			Variables.getLogger().debug("Sending "+type.name()+" request to "+uri+" \r\n "+content);
+			//Variables.getLogger().debug("Sending "+type.name()+" request to "+uri+" \r\n "+content);
+			Variables.getLogger().debug("Sending "+type.name()+" request to "+uri);
 			
 			String cred = login+":"+password;
 			cred = new String(Base64.encodeBase64(cred.getBytes()));
