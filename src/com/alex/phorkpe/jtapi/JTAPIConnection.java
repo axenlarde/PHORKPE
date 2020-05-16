@@ -8,6 +8,7 @@ import javax.telephony.events.ProvEv;
 import javax.telephony.events.ProvInServiceEv;
 import javax.telephony.events.ProvShutdownEv;
 
+import com.alex.phorkpe.utils.UsefulMethod;
 import com.alex.phorkpe.utils.Variables;
 import com.cisco.cti.util.Condition;
 import com.cisco.jtapi.CiscoAddrCreatedEvImpl;
@@ -86,7 +87,9 @@ public class JTAPIConnection implements ProviderObserver
 	 */
 	public void disconnect() throws Exception
 		{
+		UsefulMethod.clearTerminalList();
 		provider.shutdown();
+		Variables.setJtapiConnection(null);
 		}
 
 	public Provider getProvider()

@@ -1,15 +1,10 @@
 package com.alex.phorkpe.action;
 
-import javax.telephony.events.TermEv;
-
-import com.alex.phorkpe.jtapi.JTAPIConnection;
+import com.alex.phorkpe.jtapi.JTAPITerminal;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.utils.UsefulMethod;
 import com.alex.phorkpe.utils.Variables;
-import com.cisco.jtapi.extensions.CiscoTermInServiceEv;
-import com.cisco.jtapi.extensions.CiscoTermOutOfServiceEv;
 import com.cisco.jtapi.extensions.CiscoTerminal;
-import com.cisco.jtapi.extensions.CiscoTerminalObserver;
 
 /**
  * Used to send key press using JTAPI
@@ -30,78 +25,35 @@ import com.cisco.jtapi.extensions.CiscoTerminalObserver;
  *
  * @author Alexandre RATEL
  */
-public class SendKeyJTAPI extends SendKey implements CiscoTerminalObserver
+public class SendKeyJTAPI extends SendKey
 	{
 	/**
 	 * Variables
 	 */
-	private boolean terminalReady;
 	
 	public SendKeyJTAPI(Device device)
 		{
 		super(device);
-		terminalReady = false;
 		}
 
 	@Override
 	public void send(String content) throws Exception
 		{
-		JTAPIConnection connection = Variables.getJtapiConnection();
-		if(connection == null)
-			{
-			connection = new JTAPIConnection(UsefulMethod.getTargetOption("jtapihost"),
-					UsefulMethod.getTargetOption("senduser"),
-					UsefulMethod.getTargetOption("sendpassword"));
-			
-			Variables.setJtapiConnection(connection);
-			}
+		JTAPITerminal terminal = UsefulMethod.getTerminal(device.getName());
 		
-		CiscoTerminal terminal = (CiscoTerminal) connection.getProvider().getTerminal(device.getName());
-		terminal.addObserver(this);
-		
-		
-		//Wait for the terminal to get ready
-		Variables.getLogger().debug(device.getInfo()+" : JTAPI : Waiting for terminal to get ready");
-		while(!terminalReady)this.sleep(100);
+		//We wait for the terminal to get ready
+		while(!terminal.isTerminalReady())this.sleep(100);
 		
 		String reply = "";
 		
-		if(terminal.getState() == CiscoTerminal.IN_SERVICE)
+		if(terminal.getTerminal().getState() == CiscoTerminal.IN_SERVICE)
 			{
-			reply = terminal.sendData(content);
-			//Variables.getLogger().debug(device.getInfo()+" : Key sent using JTAPI and reply is : "+reply);
-			if(reply.toLowerCase().contains("success"))Variables.getLogger().debug(device.getInfo()+" : JTAPI : Key sent with success");
-			else throw new Exception(device.getInfo()+" : JTAPI : ERROR received while sending key");
+			reply = terminal.getTerminal().sendData(content);
+			if(!reply.toLowerCase().contains("success"))throw new Exception(device.getInfo()+" : JTAPI : ERROR received while sending key");
 			}
 		else
 			{
 			throw new Exception(device.getInfo()+" : JTAPI : Could not send key, the device is not in service");
-			}
-		}
-	
-	@Override
-	public void terminalChangedEvent(TermEv[] eventList)
-		{
-		if (eventList != null)
-			{
-			for (int i = 0; i < eventList.length; i++)
-				{
-				CiscoTerminal terminal = (CiscoTerminal) eventList[i].getTerminal();
-				switch(eventList[i].getID())
-					{
-					case CiscoTermInServiceEv.ID:
-						{
-						Variables.getLogger().debug(device.getInfo()+" : JTAPI : Terminal ready "+terminal.getName());
-						terminalReady = true;
-						break;
-						}
-					case CiscoTermOutOfServiceEv.ID:
-						{
-						terminalReady = false;
-						break;
-						}
-					}
-				}
 			}
 		}
 	

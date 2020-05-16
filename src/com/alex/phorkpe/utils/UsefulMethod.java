@@ -14,14 +14,17 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.JFileChooser;
+import javax.telephony.Terminal;
 
 import org.apache.log4j.Level;
 
+import com.alex.phorkpe.jtapi.JTAPIConnection;
+import com.alex.phorkpe.jtapi.JTAPITerminal;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.misc.KeyPress;
 import com.alex.phorkpe.misc.KeyPress.KeyType;
-
 import com.alex.phorkpe.misc.KeyPressProfile;
+import com.cisco.jtapi.extensions.CiscoTerminal;
 
 /**********************************
  * Class used to store the useful static methods
@@ -516,6 +519,9 @@ public class UsefulMethod
 		throw new Exception("The following key press profile was not found : "+name);
 		}
 	
+	/**
+	 * Not used but I keep it just in case
+	 */
 	public synchronized static String escapeHTML(String textToConvert)
 		{
 		textToConvert = textToConvert.replaceAll("&", "&amp;");
@@ -527,6 +533,9 @@ public class UsefulMethod
 		return textToConvert;
 		}
 	
+	/**
+	 * Not used but I keep it just in case
+	 */
 	public synchronized static String convertEncodeType(String textToConvert)
 		{
 		textToConvert = textToConvert.replaceAll("\\\n", "%0A");
@@ -542,6 +551,72 @@ public class UsefulMethod
 		textToConvert = textToConvert.replaceAll("!", "%21");
 		
 		return textToConvert;
+		}
+	
+	/**
+	 * Will initialize the JTAPI connection
+	 */
+	public static JTAPIConnection initJTAPIConnection() throws Exception
+		{
+		if(Variables.getJtapiConnection() == null)
+			{
+			Variables.setJtapiConnection(new JTAPIConnection(UsefulMethod.getTargetOption("jtapihost"),
+					UsefulMethod.getTargetOption("senduser"),
+					UsefulMethod.getTargetOption("sendpassword")));
+			
+			return Variables.getJtapiConnection();
+			}
+		else
+			{
+			Variables.getLogger().debug("JTAPI connection already up");
+			return Variables.getJtapiConnection();
+			}
+		}
+	
+	/**
+	 * Return an existing CiscoTerminal or create a new one if it doesn't exist
+	 * @throws Exception 
+	 */
+	public synchronized static JTAPITerminal getTerminal(String deviceName) throws Exception
+		{
+		for(JTAPITerminal jt : Variables.getTerminalList())
+			{
+			if(jt.getTerminal().getName().equals(deviceName))return jt;
+			}
+		
+		//If we reach this point it means that no existing terminal were found, so we create a new one
+		Variables.getLogger().debug(deviceName+" : JTAPI : Terminal not found in the list : creating a new one");
+		JTAPIConnection connection = Variables.getJtapiConnection();
+		if(connection == null)connection = initJTAPIConnection();
+		
+		CiscoTerminal terminal = (CiscoTerminal) connection.getProvider().getTerminal(deviceName);
+		if(!terminal.isRegistered())
+			{
+			Variables.getLogger().debug(deviceName+" : Device is not registered so we do not proceed");
+			throw new Exception(deviceName+" : The device is not registered");
+			}
+		
+		JTAPITerminal jt = new JTAPITerminal(terminal);
+		Variables.getTerminalList().add(jt);
+		return jt;
+		}
+	
+	/**
+	 * To clear terminal list
+	 * It discards the terminal observer and empty the list
+	 */
+	public static void clearTerminalList()
+		{
+		if((Variables.getTerminalList() != null) && (Variables.getTerminalList().size() > 0))
+			{
+			for(JTAPITerminal jt : Variables.getTerminalList())
+				{
+				jt.getTerminal().removeObserver(jt);
+				}
+			
+			Variables.getTerminalList().clear();
+			Variables.getLogger().debug("Terminal list cleared");
+			}
 		}
 	
 	/*2020*//*RATEL Alexandre 8)*/

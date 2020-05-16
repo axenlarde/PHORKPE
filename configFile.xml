@@ -19,7 +19,7 @@ Device IP;Device Name;Key Press Profile Name
 		<pingtimeout>5000</pingtimeout><!--used when trying to reach a device--><!--In millisecond-->
 		<maxthread>10</maxthread><!--Number of device processed simultaneously-->
 		<pingdevices>true</pingdevices><!--If true we will ping the devices before sending the key. An unreachable device wont be processed-->
-		<sendmethod>http</sendmethod><!--http,jtapi-->
+		<sendmethod>jtapi</sendmethod><!--http,jtapi-->
 		<sendtimeout>500</sendtimeout><!--ms-->
 		<senduser>PHORKPE</senduser>
 		<sendpassword>CCMCisco92</sendpassword>

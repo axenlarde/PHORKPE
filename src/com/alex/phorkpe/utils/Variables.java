@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import com.alex.phorkpe.jtapi.JTAPIConnection;
+import com.alex.phorkpe.jtapi.JTAPITerminal;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.misc.KeyPressProfile;
 
@@ -49,6 +50,7 @@ public class Variables
 	private static String password;
 	private static String JTAPIHost;
 	private static int timeout;
+	private static ArrayList<JTAPITerminal> terminalList;
     
     /**************
      * Constructor
@@ -60,6 +62,7 @@ public class Variables
 		deviceListFileName = "deviceList.csv";
 		keyPressProfileListFileName = "keyPressProfileList.xml";
 		resultFileName = "result.csv";
+		terminalList = new ArrayList<JTAPITerminal>();
 		}
 
 	public static String getSoftwareName()
@@ -195,6 +198,16 @@ public class Variables
 	public static void setJtapiConnection(JTAPIConnection jtapiConnection)
 		{
 		Variables.jtapiConnection = jtapiConnection;
+		}
+
+	public static ArrayList<JTAPITerminal> getTerminalList()
+		{
+		return terminalList;
+		}
+
+	public static void setTerminalList(ArrayList<JTAPITerminal> terminalList)
+		{
+		Variables.terminalList = terminalList;
 		}
 	
 	

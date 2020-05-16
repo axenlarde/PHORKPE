@@ -73,9 +73,6 @@ public abstract class SendKey extends Thread implements SendKeyInt
 		String content = "XML=<CiscoIPPhoneExecute>"
 						+ "	<ExecuteItem Priority=\""+device.getKeyPressProfile().getPriority()+"\" URL=\"Key:"+kp.getKey()+"\"/>"
 						+ "</CiscoIPPhoneExecute>";
-					
-		//content = UsefulMethod.escapeHTML(content);
-		//content = UsefulMethod.convertEncodeType(content);
 		
 		return content;
 		}
