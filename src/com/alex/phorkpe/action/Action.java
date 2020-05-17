@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 
 import com.alex.phorkpe.action.SendKey.SendMethod;
+import com.alex.phorkpe.axl.axlTools;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.utils.UsefulMethod;
 import com.alex.phorkpe.utils.Variables;
@@ -54,10 +55,24 @@ public class Action extends Thread
 				}
 			
 			/**
+			 * If the method to send key is JTAPI we first have
+			 * to associate the phone to the dedicated application user
+			 * They have to be associated all at the same time in the same AXL request
+			 */
+			SendMethod method = SendMethod.valueOf(UsefulMethod.getTargetOption("sendmethod"));
+			if((method.equals(SendMethod.jtapi)) && (Variables.isAssociatePhoneUsingAXL()))
+				{
+				Variables.getLogger().debug("Sending AXL request to associate the devices to the application user");
+				UsefulMethod.initAXLConnectionToCUCM();
+				axlTools.associatePhoneToUser(Variables.getUser(), Variables.getDeviceList());
+				Variables.getLogger().debug("AXL request done with success !");
+				}
+			
+			/**
 			 * We feed the Thread Manager then start it
 			 */
 			ArrayList<Thread> keyPressThreadList = new ArrayList<Thread>();
-			SendMethod method = SendMethod.valueOf(UsefulMethod.getTargetOption("sendmethod"));
+			
 			
 			for(Device d : Variables.getDeviceList())
 				{
@@ -87,9 +102,32 @@ public class Action extends Thread
 			Variables.getLogger().debug("Thread Manager ends !");
 			
 			/**
-			 * We eventually shut down the JTAPI connection
+			 * We eventually shut down the JTAPI and the AXL connection
 			 */
 			if(Variables.getJtapiConnection() != null)Variables.getJtapiConnection().disconnect();
+			if(Variables.getAXLConnectionToCUCMV105() != null)
+				{
+				try
+					{
+					/**
+					 * We remove the devices from the application user device list
+					 */
+					if(Variables.isAssociatePhoneUsingAXL())
+						{
+						Variables.getLogger().debug("Dissociating devices from the application user");
+						axlTools.dissociatePhoneFromUser(Variables.getUser(), Variables.getDeviceList());
+						Variables.getLogger().debug("Dissociating done !");
+						}
+					/**
+					 * There is no method to shutdown the AXL connection
+					 * I don't know how to do that, maybe it's automatic when the software ends ?
+					 */
+					}
+				catch (Exception e)
+					{
+					Variables.getLogger().error("ERROR while dissociating device from the application user : "+e.getMessage(),e);
+					}
+				}
 			
 			/**
 			 * We finish by writing the result file

@@ -2,10 +2,13 @@
 PHORKPE Overal configuration file
 
 Prerequisites :
-- Use a user wich is associated to all the targeted phones 
+- Use a user wich is associated to all the targeted phones or let the AXL process do it (see option associatephoneusingaxl) 
 - HTTP request needs the ip address of the phone to work
 - JTAPI request needs the device name to work
 - HTTP request needs the web access to be enabled to work
+- The given application user needs the following roles :
+	+ CTI roles
+	+ AXL roles
 
 Device list format :
 Device IP;Device Name;Key Press Profile Name
@@ -21,9 +24,11 @@ Device IP;Device Name;Key Press Profile Name
 		<pingdevices>true</pingdevices><!--If true we will ping the devices before sending the key. An unreachable device wont be processed-->
 		<sendmethod>jtapi</sendmethod><!--http,jtapi-->
 		<sendtimeout>500</sendtimeout><!--ms-->
-		<senduser>PHORKPE</senduser>
+		<associatephoneusingaxl>true</associatephoneusingaxl><!--If true, we will associate/deassociate all the given phone to the application user using AXL-->
+		<senduser>PHORKPE</senduser><!--The application user used for HTTP, JTAPI and AXL request-->
 		<sendpassword>CCMCisco92</sendpassword>
-		<!--JTAPI-->
-		<jtapihost>10.0.1.172</jtapihost>
+		<cucmip>10.0.1.172</cucmip><!--Used for JTAPI request and AXL configuration of the application user-->
+		<cucmaxlport>8443</cucmaxlport>
+		<axlversion>105</axlversion>
 	</config>
 </xml>

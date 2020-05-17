@@ -14,7 +14,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.JFileChooser;
-import javax.telephony.Terminal;
+import javax.xml.ws.BindingProvider;
 
 import org.apache.log4j.Level;
 
@@ -24,6 +24,7 @@ import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.misc.KeyPress;
 import com.alex.phorkpe.misc.KeyPress.KeyType;
 import com.alex.phorkpe.misc.KeyPressProfile;
+import com.alex.phorkpe.utils.Variables.cucmAXLVersion;
 import com.cisco.jtapi.extensions.CiscoTerminal;
 
 /**********************************
@@ -433,8 +434,9 @@ public class UsefulMethod
 		
 		Variables.setUser(UsefulMethod.getTargetOption("senduser"));
 		Variables.setPassword(UsefulMethod.getTargetOption("sendpassword"));
-		Variables.setJTAPIHost(UsefulMethod.getTargetOption("jtapihost"));
+		Variables.setJTAPIHost(UsefulMethod.getTargetOption("cucmip"));
 		Variables.setTimeout(Integer.parseInt(UsefulMethod.getTargetOption("sendtimeout")));
+		Variables.setAssociatePhoneUsingAXL(Boolean.parseBoolean(UsefulMethod.getTargetOption("associatephoneusingaxl")));
 		}
 	
 	/**************
@@ -560,7 +562,7 @@ public class UsefulMethod
 		{
 		if(Variables.getJtapiConnection() == null)
 			{
-			Variables.setJtapiConnection(new JTAPIConnection(UsefulMethod.getTargetOption("jtapihost"),
+			Variables.setJtapiConnection(new JTAPIConnection(UsefulMethod.getTargetOption("cucmip"),
 					UsefulMethod.getTargetOption("senduser"),
 					UsefulMethod.getTargetOption("sendpassword")));
 			
@@ -618,6 +620,104 @@ public class UsefulMethod
 			Variables.getLogger().debug("Terminal list cleared");
 			}
 		}
+	
+	/**
+	 * Method which convert a string into cucmAXLVersion
+	 */
+	public static cucmAXLVersion convertStringToCUCMAXLVersion(String version)
+		{
+		if(version.contains("80"))
+			{
+			return cucmAXLVersion.version80;
+			}
+		else if(version.contains("85"))
+			{
+			return cucmAXLVersion.version85;
+			}
+		else if(version.contains("105"))
+			{
+			return cucmAXLVersion.version105;
+			}
+		else
+			{
+			//Default : 10.5
+			return cucmAXLVersion.version105;
+			}
+		}
+	
+	/***
+	 * Method used to get the AXL version from the CUCM
+	 * We contact the CUCM using a very basic request and therefore get the version
+	 * @throws Exception 
+	 */
+	public static cucmAXLVersion getAXLVersionFromTheCUCM() throws Exception
+		{
+		/**
+		 * In this method version we just read the version from the configuration file
+		 * This has to be improved to match the method description
+		 **/
+		cucmAXLVersion AXLVersion;
+		
+		AXLVersion = UsefulMethod.convertStringToCUCMAXLVersion("version"+getTargetOption("axlversion"));
+		
+		return AXLVersion;
+		}
+	
+	/******
+	 * Method used to initialize the AXL Connection to the CUCM
+	 */
+	public static synchronized void initAXLConnectionToCUCM() throws Exception
+		{
+		try
+			{
+			String axlHost = UsefulMethod.getTargetOption("cucmip");
+			String axlP = UsefulMethod.getTargetOption("cucmaxlport");
+			Variables.getLogger().debug("Initializing AXL connection to "+axlHost+":"+axlP);
+			
+			UsefulMethod.disableSecurity();//We first turned off security
+			
+			if(Variables.getCUCMVersion().equals(cucmAXLVersion.version85))
+				{
+				throw new Exception("AXL unsupported version");
+				}
+			else if(Variables.getCUCMVersion().equals(cucmAXLVersion.version105))
+				{
+				if(Variables.getAXLConnectionToCUCMV105() == null)
+					{
+					com.cisco.axlapiservice10.AXLAPIService axlService = new com.cisco.axlapiservice10.AXLAPIService();
+					com.cisco.axlapiservice10.AXLPort axlPort = axlService.getAXLPort();
+					
+					// Set the URL, user, and password on the JAX-WS client
+					String validatorUrl = "https://"+axlHost+":"+axlP+"/axl/";
+					
+					((BindingProvider) axlPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, validatorUrl);
+					((BindingProvider) axlPort).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, UsefulMethod.getTargetOption("senduser"));
+					((BindingProvider) axlPort).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, UsefulMethod.getTargetOption("sendpassword"));
+					
+					Variables.setAXLConnectionToCUCMV105(axlPort);
+					Variables.getLogger().debug("AXL WSDL Initialization done");
+					}
+				else
+					{
+					Variables.getLogger().debug("AXL connection already initialized, aborting");
+					}
+				}
+			
+			/**
+			 * We now check if the CUCM is reachable by asking him its version
+			 */
+			Variables.getLogger().debug("CUCM version : "+SimpleRequest.getCUCMVersion());
+			Variables.setCUCMReachable(true);
+			}
+		catch (Exception e)
+			{
+			Variables.getLogger().error("Error while initializing AXL CUCM connection : "+e.getMessage(),e);
+			Variables.setCUCMReachable(false);
+			throw e;
+			}
+		}
+	
+	
 	
 	/*2020*//*RATEL Alexandre 8)*/
 	}
