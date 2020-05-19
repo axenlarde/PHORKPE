@@ -49,7 +49,7 @@ public class SendKeyJTAPI extends SendKey
 		if(terminal.getTerminal().getState() == CiscoTerminal.IN_SERVICE)
 			{
 			reply = terminal.getTerminal().sendData(content);
-			if(!reply.toLowerCase().contains("success"))throw new Exception(device.getInfo()+" : JTAPI : ERROR received while sending key");
+			if(!reply.toLowerCase().contains("success"))throw new Exception(device.getInfo()+" : JTAPI : ERROR received while sending key : "+reply);
 			}
 		else
 			{

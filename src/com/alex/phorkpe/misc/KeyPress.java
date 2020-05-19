@@ -10,6 +10,8 @@ public class KeyPress
 	public enum KeyType
 		{
 		key,
+		reset,
+		restart,
 		wait
 		};
 	

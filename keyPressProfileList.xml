@@ -12,47 +12,80 @@ Priority :
 
 Key : See the documentation for the whole key list
 Settings, KeyPad4, KeyPadPound, KeyPadStar, Soft2, Feature1, Line1, NavDwn, Etc.
+
+You can also add some advanced key which are not sent to the phone but handle by PHORKPE :
+- wait : to wait the given number of millisecond
+- reset : to reset the phone (use it only as the last key otherwise the phone won't process the rest of the key)
+- restart : to restart the phone (use it only as the last key otherwise the phone won't process the rest of the key)
 -->
 
 
 <xml>
 	<profiles>
 		<profile>
-			<name>securityReset6941</name>
-			<priority>1</priority>
-			<defaultintercommandtimer>500</defaultintercommandtimer>
+			<name>ResetCertificate7911</name>
+			<priority>0</priority>
+			<defaultintercommandtimer>1000</defaultintercommandtimer>
 			<tosend>
-				<key>Settings</key>
-				<wait>100</wait>
+				<key>Applications</key>
+				<key>KeyPad3</key>
 				<key>KeyPad4</key>
 				<key>KeyPad5</key>
 				<key>KeyPad2</key>
+				<key>KeyPadStar</key>
+				<key>KeyPadStar</key>
+				<key>KeyPadPound</key>
+				<wait>5000</wait>
 				<key>Soft4</key>
 				<key>Soft2</key>
+				<key>Applications</key>
 			</tosend>
 		</profile>
 		<profile>
-			<name>securityReset79XX</name>
-			<priority>1</priority>
-			<defaultintercommandtimer>500</defaultintercommandtimer>
+			<name>ResetCertificate7942</name>
+			<priority>0</priority>
+			<defaultintercommandtimer>1000</defaultintercommandtimer>
 			<tosend>
 				<key>Settings</key>
-				<wait>100</wait>
 				<key>KeyPad4</key>
 				<key>KeyPad5</key>
 				<key>KeyPad2</key>
+				<key>KeyPadStar</key>
+				<key>KeyPadStar</key>
+				<key>KeyPadPound</key>
+				<wait>5000</wait>
 				<key>Soft4</key>
 				<key>Soft2</key>
+				<key>Settings</key>
 			</tosend>
 		</profile>
 		<profile>
-			<name>test</name>
-			<priority>1</priority>
+			<name>ResetCertificate6941</name>
+			<priority>0</priority>
+			<defaultintercommandtimer>1000</defaultintercommandtimer>
+			<tosend>
+				<key>Settings</key>
+				<key>KeyPad4</key>
+				<key>KeyPad5</key>
+				<key>Soft4</key>
+				<key>Soft2</key>
+				<key>Settings</key>
+			</tosend>
+		</profile>
+		<profile>
+			<name>Reset</name>
+			<priority>0</priority>
 			<defaultintercommandtimer>100</defaultintercommandtimer>
 			<tosend>
-				<key>Settings</key>
-				<wait>200</wait>
-				<key>KeyPad4</key>
+				<reset></reset>
+			</tosend>
+		</profile>
+		<profile>
+			<name>ResetNetwork7942</name>
+			<priority>0</priority>
+			<defaultintercommandtimer>1000</defaultintercommandtimer>
+			<tosend>
+				<key>Soft3</key>
 			</tosend>
 		</profile>
 	</profiles>

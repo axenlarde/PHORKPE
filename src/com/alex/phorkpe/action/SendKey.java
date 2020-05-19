@@ -1,6 +1,7 @@
 package com.alex.phorkpe.action;
 
 
+import com.alex.phorkpe.axl.axlTools;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.misc.KeyPress;
 import com.alex.phorkpe.misc.KeyPress.KeyType;
@@ -43,19 +44,30 @@ public abstract class SendKey extends Thread implements SendKeyInt
 				{
 				if(kp.getType().equals(KeyType.wait))
 					{
+					Variables.getLogger().debug(device.getInfo()+" : Waiting "+kp.getKey()+" ms");
 					this.sleep(Integer.parseInt(kp.getKey()));
+					}
+				else if(kp.getType().equals(KeyType.reset))
+					{
+					Variables.getLogger().debug(device.getInfo()+" : Reseting");
+					axlTools.resetDevice(device.getName());
+					}
+				else if(kp.getType().equals(KeyType.restart))
+					{
+					Variables.getLogger().debug(device.getInfo()+" : Restarting");
+					axlTools.restartDevice(device.getName());
 					}
 				else
 					{
 					String content = buildKeyPressRequest(device, kp);
 					
 					send(content);//Sending the request
-					device.setStatus(statusType.done);
 					Variables.getLogger().debug(device.getInfo()+" : Key '"+kp.getKey()+"' sent with success !");
 					}
 				
 				this.sleep(device.getKeyPressProfile().getDefaultInterCommandTimer());
 				}
+			device.setStatus(statusType.done);
 			}
 		catch (Exception e)
 			{

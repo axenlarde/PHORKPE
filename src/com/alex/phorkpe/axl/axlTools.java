@@ -3,10 +3,13 @@ package com.alex.phorkpe.axl;
 import java.util.ArrayList;
 
 import com.alex.phorkpe.misc.Device;
+import com.alex.phorkpe.utils.UsefulMethod;
 import com.alex.phorkpe.utils.Variables;
 import com.alex.phorkpe.utils.Variables.cucmAXLVersion;
 import com.alex.phorkpe.utils.Variables.statusType;
+import com.cisco.axl.api._10.DoDeviceResetReq;
 import com.cisco.axl.api._10.UpdateAppUserReq;
+import com.cisco.axl.api._10.XFkType;
 import com.cisco.axlapiservice10.AXLError;
 
 public class axlTools
@@ -55,7 +58,7 @@ public class axlTools
 			}
 		catch (Exception e)
 			{
-			throw new Exception("ERROR while sending the AXL request : "+e.getMessage(),e);
+			throw new Exception("ERROR while sending AssociatePhoneToUser AXL request : "+e.getMessage(),e);
 			}
 		}
 	
@@ -90,10 +93,87 @@ public class axlTools
 			}
 		catch (Exception e)
 			{
-			throw new Exception("ERROR while sending the AXL request : "+e.getMessage(),e);
+			throw new Exception("ERROR while sending DissociatePhoneFromUser AXL request : "+e.getMessage(),e);
 			}
 		}
 	
+	/**
+	 * Used to reset a phone
+	 * @param deviceName
+	 * @throws Exception 
+	 */
+	public synchronized static void resetDevice(String deviceName) throws Exception
+		{
+		if(Variables.getCUCMVersion().equals(cucmAXLVersion.version105))
+			{
+			resetDeviceV105(deviceName);
+			}
+		else
+			{
+			throw new Exception("unsupported AXL version");
+			}
+		}
+	
+	private static void resetDeviceV105(String deviceName) throws Exception
+		{
+		try
+			{
+			if(Variables.getAXLConnectionToCUCMV105() == null)UsefulMethod.initAXLConnectionToCUCM();
+		
+			com.cisco.axl.api._10.DoDeviceResetReq req = new com.cisco.axl.api._10.DoDeviceResetReq();
+		
+			req.setDeviceName(getPhoneUUIDV105(deviceName));
+			req.setDeviceResetType("Reset");
+			
+			com.cisco.axl.api._10.StandardResponse resp = Variables.getAXLConnectionToCUCMV105().doDeviceReset(req);
+			}
+		catch (Exception e)
+			{
+			throw new Exception("ERROR while sending ResetDevice AXL request : "+e.getMessage(),e);
+			}
+		}
+	
+	/**
+	 * Used to restart a phone
+	 * @param deviceName
+	 * @throws Exception 
+	 */
+	public synchronized static void restartDevice(String deviceName) throws Exception
+		{
+		if(Variables.getCUCMVersion().equals(cucmAXLVersion.version105))
+			{
+			restartDeviceV105(deviceName);
+			}
+		else
+			{
+			throw new Exception("unsupported AXL version");
+			}
+		}
+	
+	private static void restartDeviceV105(String deviceName) throws Exception
+		{
+		if(Variables.getAXLConnectionToCUCMV105() == null)UsefulMethod.initAXLConnectionToCUCM();
+		
+		com.cisco.axl.api._10.DoDeviceResetReq req = new com.cisco.axl.api._10.DoDeviceResetReq();
+	
+		req.setDeviceName(getPhoneUUIDV105(deviceName));
+		req.setDeviceResetType("Restart");
+		
+		com.cisco.axl.api._10.StandardResponse resp = Variables.getAXLConnectionToCUCMV105().doDeviceReset(req);
+		}
+	
+	private synchronized static com.cisco.axl.api._10.XFkType getPhoneUUIDV105(String deviceName) throws AXLError
+		{
+		com.cisco.axl.api._10.GetPhoneReq req = new com.cisco.axl.api._10.GetPhoneReq();
+		com.cisco.axl.api._10.RPhone returnedTags = new com.cisco.axl.api._10.RPhone();
+		req.setName(deviceName);
+		returnedTags.setUuid("");
+		req.setReturnedTags(returnedTags);
+		com.cisco.axl.api._10.GetPhoneRes resp = Variables.getAXLConnectionToCUCMV105().getPhone(req);//We send the request to the CUCM
+		com.cisco.axl.api._10.XFkType xfk = new com.cisco.axl.api._10.XFkType();
+		xfk.setUuid(resp.getReturn().getPhone().getUuid());
+		return xfk;
+		}
 	
 	/*2020*//*RATEL Alexandre 8)*/
 	}

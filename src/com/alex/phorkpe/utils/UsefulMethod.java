@@ -589,7 +589,6 @@ public class UsefulMethod
 		//If we reach this point it means that no existing terminal were found, so we create a new one
 		Variables.getLogger().debug(deviceName+" : JTAPI : Terminal not found in the list : creating a new one");
 		JTAPIConnection connection = Variables.getJtapiConnection();
-		if(connection == null)connection = initJTAPIConnection();
 		
 		CiscoTerminal terminal = (CiscoTerminal) connection.getProvider().getTerminal(deviceName);
 		if(!terminal.isRegistered())

@@ -55,12 +55,11 @@ public class Action extends Thread
 				}
 			
 			/**
-			 * If the method to send key is JTAPI we first have
-			 * to associate the phone to the dedicated application user
+			 * we first have to associate the phone to the dedicated application user
 			 * They have to be associated all at the same time in the same AXL request
 			 */
 			SendMethod method = SendMethod.valueOf(UsefulMethod.getTargetOption("sendmethod"));
-			if((method.equals(SendMethod.jtapi)) && (Variables.isAssociatePhoneUsingAXL()))
+			if(Variables.isAssociatePhoneUsingAXL())
 				{
 				Variables.getLogger().debug("Sending AXL request to associate the devices to the application user");
 				UsefulMethod.initAXLConnectionToCUCM();
@@ -69,10 +68,24 @@ public class Action extends Thread
 				}
 			
 			/**
+			 * If JTAPI is asked we initiate the connection with the CUCM
+			 */
+			if(method.equals(SendMethod.jtapi))
+				{
+				if(Variables.getJtapiConnection() == null)UsefulMethod.initJTAPIConnection();
+				Variables.getLogger().debug("Waiting for the JTAPI Provider to detect the newly associated devices");
+				this.sleep(500);
+				while(Variables.getJtapiConnection().getProvider().getTerminals().length < Variables.getDeviceList().size())
+					{
+					this.sleep(500);	
+					}
+				Variables.getLogger().debug("The JTAPI provider detected the devices !");
+				}
+			
+			/**
 			 * We feed the Thread Manager then start it
 			 */
 			ArrayList<Thread> keyPressThreadList = new ArrayList<Thread>();
-			
 			
 			for(Device d : Variables.getDeviceList())
 				{
@@ -130,6 +143,16 @@ public class Action extends Thread
 				}
 			
 			/**
+			 * We display the result in the logs
+			 */
+			Variables.getLogger().debug("Final result :");
+			StringBuffer buf = new StringBuffer("");
+			for(Device d : Variables.getDeviceList())
+				{
+				buf.append(d.getInfo()+" : "+d.getStatus()+"\r\n");
+				}
+			Variables.getLogger().debug(buf.toString());
+			/**
 			 * We finish by writing the result file
 			 */
 			Variables.getLogger().debug("Writing the result file");
@@ -140,14 +163,11 @@ public class Action extends Thread
 			buffReport.write(firstLine);
 			for(Device d : Variables.getDeviceList())
 				{
-				if((d.getStatus().equals(statusType.error)) || (d.getStatus().equals(statusType.disabled)))
-					{
-					buffReport.write(d.getIp()+splitter+
-							d.getName()+splitter+
-							d.getKeyPressProfile().getName()+splitter+
-							d.getStatus().name()+splitter+
-							d.getStatusDesc()+"\r\n");
-					}
+				buffReport.write(d.getIp()+splitter+
+						d.getName()+splitter+
+						d.getKeyPressProfile().getName()+splitter+
+						d.getStatus().name()+splitter+
+						d.getStatusDesc()+"\r\n");
 				}
 			buffReport.flush();
 			buffReport.close();
