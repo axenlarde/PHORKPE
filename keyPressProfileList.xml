@@ -15,8 +15,8 @@ Settings, KeyPad4, KeyPadPound, KeyPadStar, Soft2, Feature1, Line1, NavDwn, Etc.
 
 You can also add some advanced key which are not sent to the phone but handle by PHORKPE :
 - wait : to wait the given number of millisecond
-- reset : to reset the phone (use it only as the last key otherwise the phone won't process the rest of the key)
-- restart : to restart the phone (use it only as the last key otherwise the phone won't process the rest of the key)
+- reset : to reset the phone (use it only as the last key otherwise the phone won't obviously process the rest of the key)
+- restart : to restart the phone (use it only as the last key otherwise the phone won't obviously process the rest of the key)
 -->
 
 

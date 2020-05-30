@@ -18,6 +18,7 @@ Device IP;Device Name;Key Press Profile Name
 	<config>
 		<!--Misc-->
 		<log4j>DEBUG</log4j><!--Logging level : ERROR,INFO,DEBUG-->
+		<language>french</language><!--french,english-->
 		<csvsplitter>;</csvsplitter><!--Used to read and write csv file-->
 		<pingtimeout>5000</pingtimeout><!--used when trying to reach a device--><!--In millisecond-->
 		<maxthread>10</maxthread><!--Number of device processed simultaneously-->

@@ -74,6 +74,11 @@ public class Variables
 	private static com.cisco.axlapiservice10.AXLPort AXLConnectionToCUCMV105;//Connection to CUCM version 105
 	private static boolean associatePhoneUsingAXL;
     
+	//Langage management
+	public enum language{english,french};
+	private static String languageFileName;
+	private static ArrayList<ArrayList<String[][]>> languageContentList;
+	
     /**************
      * Constructor
      **************/
@@ -84,6 +89,7 @@ public class Variables
 		deviceListFileName = "deviceList.csv";
 		keyPressProfileListFileName = "keyPressProfileList.xml";
 		resultFileName = "result.csv";
+		languageFileName = "languages.xml";
 		terminalList = new ArrayList<JTAPITerminal>();
 		}
 
@@ -284,6 +290,28 @@ public class Variables
 	public static void setAssociatePhoneUsingAXL(boolean associatePhoneUsingAXL)
 		{
 		Variables.associatePhoneUsingAXL = associatePhoneUsingAXL;
+		}
+	
+	public static ArrayList<ArrayList<String[][]>> getLanguageContentList() throws Exception
+		{
+		if(languageContentList == null)
+			{
+			Variables.getLogger().debug("Initialisation of languageContentList");
+			Variables.setLanguageContentList(UsefulMethod.readExtFile("language", Variables.getLanguageFileName()));
+			}
+		
+		return languageContentList;
+		}
+
+	public static void setLanguageContentList(
+			ArrayList<ArrayList<String[][]>> languageContentList)
+		{
+		Variables.languageContentList = languageContentList;
+		}
+
+	public static String getLanguageFileName()
+		{
+		return languageFileName;
 		}
 	
 	

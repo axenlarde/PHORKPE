@@ -2,8 +2,7 @@ package com.alex.phorkpe.main;
 
 import org.apache.log4j.Level;
 
-import com.alex.phorkpe.action.Action;
-import com.alex.phorkpe.action.ThreadManager;
+import com.alex.phorkpe.gui.MainWindow;
 import com.alex.phorkpe.utils.InitLogging;
 import com.alex.phorkpe.utils.UsefulMethod;
 import com.alex.phorkpe.utils.Variables;
@@ -86,7 +85,7 @@ public class Main
 		try
 			{
 			Variables.getLogger().info("Launching Main Class");
-			new Action();
+			new MainWindow();
 			}
 		catch (Exception exc)
 			{

@@ -55,7 +55,7 @@ public class ThreadManager extends Thread
 				}
 			
 			/**
-			 * To end this thread we wait for all the ping thread to end
+			 * To end this thread we wait for all the thread to end
 			 */
 			boolean alive = true;
 			while(alive)
@@ -120,6 +120,10 @@ public class ThreadManager extends Thread
 		this.pause = pause;
 		}
 	
+	public void shutDown()
+		{
+		this.stop = true;
+		}
 	
 	
 	/*2020*//*RATEL Alexandre 8)*/
