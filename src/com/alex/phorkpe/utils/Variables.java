@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import com.alex.phorkpe.jtapi.JTAPIConnection;
+import com.alex.phorkpe.jtapi.JTAPILine;
 import com.alex.phorkpe.jtapi.JTAPITerminal;
+import com.alex.phorkpe.misc.CallProfile;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.misc.KeyPressProfile;
 
@@ -60,15 +62,18 @@ public class Variables
 	private static String configFileName;
 	private static String deviceListFileName;
 	private static String keyPressProfileListFileName;
+	private static String callProfileListFileName;
 	private static String resultFileName;
 	private static ArrayList<Device> deviceList;
-	private static ArrayList<KeyPressProfile> keyPressprofileList;
+	private static ArrayList<KeyPressProfile> keyPressProfileList;
+	private static ArrayList<CallProfile> callProfileList;
 	private static JTAPIConnection jtapiConnection;
 	private static String user;
 	private static String password;
 	private static String JTAPIHost;
 	private static int timeout;
 	private static ArrayList<JTAPITerminal> terminalList;
+	private static ArrayList<JTAPILine> lineList;
 	private static boolean CUCMReachable;
 	private static cucmAXLVersion CUCMVersion;
 	private static com.cisco.axlapiservice10.AXLPort AXLConnectionToCUCMV105;//Connection to CUCM version 105
@@ -88,9 +93,11 @@ public class Variables
 		configFileName = "configFile.xml";
 		deviceListFileName = "deviceList.csv";
 		keyPressProfileListFileName = "keyPressProfileList.xml";
+		callProfileListFileName = "callProfileList.xml";
 		resultFileName = "result.csv";
 		languageFileName = "languages.xml";
 		terminalList = new ArrayList<JTAPITerminal>();
+		lineList = new ArrayList<JTAPILine>();
 		}
 
 	public static String getSoftwareName()
@@ -168,14 +175,14 @@ public class Variables
 		Variables.deviceList = deviceList;
 		}
 
-	public static ArrayList<KeyPressProfile> getKeyPressprofileList()
+	public static ArrayList<KeyPressProfile> getKeyPressProfileList()
 		{
-		return keyPressprofileList;
+		return keyPressProfileList;
 		}
 
-	public static void setKeyPressprofileList(ArrayList<KeyPressProfile> keyPressprofileList)
+	public static void setKeyPressprofileList(ArrayList<KeyPressProfile> keyPressProfileList)
 		{
-		Variables.keyPressprofileList = keyPressprofileList;
+		Variables.keyPressProfileList = keyPressProfileList;
 		}
 
 	public synchronized static JTAPIConnection getJtapiConnection() throws Exception
@@ -312,6 +319,31 @@ public class Variables
 	public static String getLanguageFileName()
 		{
 		return languageFileName;
+		}
+
+	public static ArrayList<CallProfile> getCallProfileList()
+		{
+		return callProfileList;
+		}
+
+	public static void setCallProfileList(ArrayList<CallProfile> callProfileList)
+		{
+		Variables.callProfileList = callProfileList;
+		}
+
+	public static String getCallProfileListFileName()
+		{
+		return callProfileListFileName;
+		}
+
+	public static ArrayList<JTAPILine> getLineList()
+		{
+		return lineList;
+		}
+
+	public static void setLineList(ArrayList<JTAPILine> lineList)
+		{
+		Variables.lineList = lineList;
 		}
 	
 	

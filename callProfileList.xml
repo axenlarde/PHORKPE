@@ -1,0 +1,32 @@
+<!--
+PHORKPE Call profile list
+
+Each profile list the action you want the phone to execute
+
+Available :
+	- <call>Number to dial</call> Call the given number. Will wait for the call to be answered before continue
+	- <holdon></holdon> Put the call on hold
+	- <holdoff></holdoff> Get the call back
+	- <transfer>Number to dial</transfer> Transfer the active call to the given number
+	- <conference>Number to dial separated by a comma</conference> create a conference between the active call and the given numbers
+	- <wait>Time to wait in ms</wait> Wait the given time
+	- <waitandanswer></waitandanswer> wait for an incoming call and answer it
+	- <end></end> End the current call
+-->
+
+<xml>
+	<profiles>
+		<profile>
+			<name>default</name>
+			<defaultintercommandtimer>1000</defaultintercommandtimer>
+			<todo>
+				<call>12345</call>
+				<wait>2000</wait>
+				<holdon></holdon>
+				<wait>5000</wait>
+				<holdoff></holdoff>
+				<end></end>
+			</todo>
+		</profile>
+	</profiles>
+</xml>

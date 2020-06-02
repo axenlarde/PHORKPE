@@ -1,0 +1,59 @@
+﻿<!--
+Language configuration file
+-->
+
+<languages>
+	<language>
+		<misc>
+			<name>english</name>
+		</misc>
+		<values>
+			<!--GUI-->
+			<guilinetocontrol>Line number : </guilinetocontrol>
+			<guicontrolbutton>Control</guicontrolbutton>
+			<stop>Stop</stop>
+			<guicallbutton>Call</guicallbutton>
+			<guianswerbutton>Answer</guianswerbutton>
+			<guiholdbutton>Hold</guiholdbutton>
+			<guitransferbutton>Transfer</guitransferbutton>
+			<guiconferencebutton>Conference</guiconferencebutton>
+			<guiendbutton>End</guiendbutton>
+			<yes>Yes</yes>
+			<no>No</no>
+			<error>Error</error>
+			<guimenu>Action</guimenu>
+			<guisend>Send</guisend>
+			<guikeys>Keys</guikeys>
+			<guicontrol>Control</guicontrol>
+			<guicalls>Calls</guicalls>
+			<guiscriptcalls>Script Calls</guiscriptcalls>
+			<guifullcontrol>Full control</guifullcontrol>
+			<exit>Exit</exit>
+			<tools>Tools</tools>
+			<option>Option</option>
+			<gencollectionfile>Generate collection file</gencollectionfile>
+			<gentemplatefile>Generate template file</gentemplatefile>
+			<help>Help</help>
+			<about>About</about>
+			<softwarename>Software name</softwarename>
+			<softwareversion>Software version</softwareversion>
+			<author>Author</author>
+			<contact>Contact</contact>
+		</values>
+	</language>
+	<language>
+		<misc>
+			<name>french</name>
+		</misc>
+		<values>
+			<!--Misc-->
+			<selectbutton>Select</selectbutton>
+			<submitbutton>Submit</submitbutton>
+			<cancelbutton>Cancel</cancelbutton>
+			<yes>Yes</yes>
+			<no>No</no>
+			<error>Error</error>
+			<!--GUI-->
+		</values>
+	</language>
+</languages>

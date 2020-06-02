@@ -34,9 +34,10 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	public JMenu menu;
 	public JMenu send;
 	public JMenuItem keys;
-	public JMenu controle;
+	public JMenu control;
 	public JMenuItem calls;
-	public JMenuItem fullControle;
+	public JMenuItem scriptCalls;
+	public JMenuItem fullControl;
 	public JMenuItem exit;
 	public JMenu tools;
 	public JMenuItem option;
@@ -61,9 +62,10 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		menu = new JMenu(LanguageManagement.getString("guimenu"));
 		send = new JMenu(LanguageManagement.getString("guisend"));
 		keys = new JMenuItem(LanguageManagement.getString("guikeys"));
-		controle = new JMenu(LanguageManagement.getString("guicontrole"));
+		control = new JMenu(LanguageManagement.getString("guicontrol"));
 		calls = new JMenuItem(LanguageManagement.getString("guicalls"));
-		fullControle = new JMenuItem(LanguageManagement.getString("guifullcontrole"));
+		scriptCalls = new JMenuItem(LanguageManagement.getString("guiscriptcalls"));
+		fullControl = new JMenuItem(LanguageManagement.getString("guifullcontrol"));
 		exit = new JMenuItem(LanguageManagement.getString("exit"));
 		tools = new JMenu(LanguageManagement.getString("tools"));
 		option = new JMenuItem(LanguageManagement.getString("option"));
@@ -104,9 +106,10 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		myMenuBar.add(help);
 		send.add(keys);
 		menu.add(send);
-		controle.add(calls);
-		controle.add(fullControle);
-		menu.add(controle);
+		control.add(calls);
+		control.add(scriptCalls);
+		control.add(fullControl);
+		menu.add(control);
 		menu.add(exit);
 		tools.add(option);
 		tools.add(genCollectionFile);
@@ -127,7 +130,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		//Events
 		keys.addActionListener(this);
 		calls.addActionListener(this);
-		fullControle.addActionListener(this);
+		fullControl.addActionListener(this);
 		exit.addActionListener(this);
 		option.addActionListener(this);
 		genCollectionFile.addActionListener(this);
@@ -161,13 +164,12 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 			{
 			Variables.getLogger().info("Calls button pressed");
 			
-			//To be written
-			
 			this.getContentPane().removeAll();
+			this.getContentPane().add(new CallControlPanel(this));
 			this.repaint();
 			this.validate();
 			}
-		else if(evt.getSource() == this.fullControle)
+		else if(evt.getSource() == this.fullControl)
 			{
 			Variables.getLogger().info("Full controle button pressed");
 

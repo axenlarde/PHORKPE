@@ -19,11 +19,11 @@ public class axlTools
 	 * Used to associate the given device list to the dedicated application user
 	 * @throws Exception 
 	 */
-	public synchronized static void associatePhoneToUser(String applicationUser, ArrayList<Device> deviceList) throws Exception
+	public synchronized static void associateDeviceToUser(String applicationUser, ArrayList<Device> deviceList) throws Exception
 		{
 		if(Variables.getCUCMVersion().equals(cucmAXLVersion.version105))
 			{
-			associatePhoneToUserV105(applicationUser, deviceList);
+			associateDeviceToUserV105(applicationUser, deviceList);
 			}
 		else
 			{
@@ -31,7 +31,7 @@ public class axlTools
 			}
 		}
 	
-	private static void associatePhoneToUserV105(String applicationUser, ArrayList<Device> deviceList) throws Exception
+	private static void associateDeviceToUserV105(String applicationUser, ArrayList<Device> deviceList) throws Exception
 		{
 		try
 			{
@@ -63,14 +63,14 @@ public class axlTools
 		}
 	
 	/**
-	 * Used to dissociate the given device list from the dedicated application user
+	 * Used to associate the given device list to the dedicated application user
 	 * @throws Exception 
 	 */
-	public synchronized static void dissociatePhoneFromUser(String applicationUser, ArrayList<Device> deviceList) throws Exception
+	public synchronized static void associatePhoneToUser(String applicationUser, ArrayList<String> phoneList) throws Exception
 		{
 		if(Variables.getCUCMVersion().equals(cucmAXLVersion.version105))
 			{
-			dissociatePhoneFromUserV105(applicationUser, deviceList);
+			associatePhoneToUserV105(applicationUser, phoneList);
 			}
 		else
 			{
@@ -78,7 +78,47 @@ public class axlTools
 			}
 		}
 	
-	private static void dissociatePhoneFromUserV105(String applicationUser, ArrayList<Device> deviceList) throws Exception
+	private static void associatePhoneToUserV105(String applicationUser, ArrayList<String> phoneList) throws Exception
+		{
+		try
+			{
+			com.cisco.axl.api._10.UpdateAppUserReq req = new com.cisco.axl.api._10.UpdateAppUserReq();
+			com.cisco.axl.api._10.UpdateAppUserReq.AssociatedDevices devices = new com.cisco.axl.api._10.UpdateAppUserReq.AssociatedDevices();
+			
+			req.setUserid(applicationUser);
+			
+			for(String s : phoneList)
+				{
+				devices.getDevice().add(s);
+				}
+			
+			req.setAssociatedDevices(devices);
+			
+			com.cisco.axl.api._10.StandardResponse resp = Variables.getAXLConnectionToCUCMV105().updateAppUser(req);
+			}
+		catch (Exception e)
+			{
+			throw new Exception("ERROR while sending AssociatePhoneToUser AXL request : "+e.getMessage(),e);
+			}
+		}
+	
+	/**
+	 * Used to dissociate the given device list from the dedicated application user
+	 * @throws Exception 
+	 */
+	public synchronized static void dissociateFromUser(String applicationUser) throws Exception
+		{
+		if(Variables.getCUCMVersion().equals(cucmAXLVersion.version105))
+			{
+			dissociateFromUserV105(applicationUser);
+			}
+		else
+			{
+			throw new Exception("unsupported AXL version");
+			}
+		}
+	
+	private static void dissociateFromUserV105(String applicationUser) throws Exception
 		{
 		try
 			{
@@ -173,6 +213,23 @@ public class axlTools
 		com.cisco.axl.api._10.XFkType xfk = new com.cisco.axl.api._10.XFkType();
 		xfk.setUuid(resp.getReturn().getPhone().getUuid());
 		return xfk;
+		}
+	
+	public static String getPhoneFromLineNumber(String lineNumber) throws Exception
+		{
+		if(Variables.getCUCMVersion().equals(cucmAXLVersion.version105))
+			{
+			return getPhoneFromLineNumberV105(lineNumber);
+			}
+		else
+			{
+			throw new Exception("unsupported AXL version");
+			}
+		}
+	
+	private static String getPhoneFromLineNumberV105(String lineNumber) throws Exception
+		{
+		//To be written
 		}
 	
 	/*2020*//*RATEL Alexandre 8)*/

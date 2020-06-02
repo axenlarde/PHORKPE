@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.alex.phorkpe.action.SendKey.SendMethod;
 import com.alex.phorkpe.axl.axlTools;
+import com.alex.phorkpe.jtapi.JTAPITools;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.utils.UsefulMethod;
 import com.alex.phorkpe.utils.Variables;
@@ -67,7 +68,7 @@ public class Action extends Thread
 				{
 				Variables.getLogger().debug("Sending AXL request to associate the devices to the application user");
 				UsefulMethod.initAXLConnectionToCUCM();
-				axlTools.associatePhoneToUser(Variables.getUser(), Variables.getDeviceList());
+				axlTools.associateDeviceToUser(Variables.getUser(), Variables.getDeviceList());
 				Variables.getLogger().debug("AXL request done with success !");
 				}
 			
@@ -76,7 +77,7 @@ public class Action extends Thread
 			 */
 			if(method.equals(SendMethod.jtapi) && run)
 				{
-				if(Variables.getJtapiConnection() == null)UsefulMethod.initJTAPIConnection();
+				if(Variables.getJtapiConnection() == null)JTAPITools.initJTAPIConnection();
 				Variables.getLogger().debug("Waiting for the JTAPI Provider to detect the newly associated devices");
 				this.sleep(500);
 				while(Variables.getJtapiConnection().getProvider().getTerminals().length < Variables.getDeviceList().size())
@@ -194,7 +195,7 @@ public class Action extends Thread
 			if(Variables.isAssociatePhoneUsingAXL())
 				{
 				Variables.getLogger().debug("Dissociating devices from the application user");
-				axlTools.dissociatePhoneFromUser(Variables.getUser(), Variables.getDeviceList());
+				axlTools.dissociateFromUser(Variables.getUser());
 				Variables.getLogger().debug("Dissociating done !");
 				}
 			/**

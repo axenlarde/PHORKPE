@@ -7,23 +7,21 @@ import java.util.ArrayList;
  *
  * @author Alexandre RATEL
  */
-public class KeyPressProfile
+public class CallProfile
 	{
 	/**
 	 * Variables
 	 */
 	private String name;
-	private int priority;
 	private int defaultInterCommandTimer;
-	ArrayList<KeyPress> keyList;
+	ArrayList<Call> callList;
 	
-	public KeyPressProfile(String name, int priority, int defaultInterCommandTimer, ArrayList<KeyPress> keyList)
+	public CallProfile(String name, int defaultInterCommandTimer, ArrayList<Call> callList)
 		{
 		super();
 		this.name = name;
-		this.priority = priority;
 		this.defaultInterCommandTimer = defaultInterCommandTimer;
-		this.keyList = keyList;
+		this.callList = callList;
 		}
 
 	public String getName()
@@ -31,20 +29,17 @@ public class KeyPressProfile
 		return name;
 		}
 
-	public int getPriority()
-		{
-		return priority;
-		}
-
 	public int getDefaultInterCommandTimer()
 		{
 		return defaultInterCommandTimer;
 		}
 
-	public ArrayList<KeyPress> getKeyList()
+	public ArrayList<Call> getCallList()
 		{
-		return keyList;
+		return callList;
 		}
+
+	
 	
 	/*2020*//*RATEL Alexandre 8)*/
 	}

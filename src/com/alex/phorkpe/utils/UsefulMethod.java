@@ -19,6 +19,7 @@ import javax.xml.ws.BindingProvider;
 import org.apache.log4j.Level;
 
 import com.alex.phorkpe.jtapi.JTAPIConnection;
+import com.alex.phorkpe.jtapi.JTAPILine;
 import com.alex.phorkpe.jtapi.JTAPITerminal;
 import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.misc.KeyPress;
@@ -322,7 +323,7 @@ public class UsefulMethod
 				
 				keyPressProfileList.add(new KeyPressProfile(keyPressProfileName,
 						Integer.parseInt(UsefulMethod.getItemByName("priority", tab)),
-						Long.parseLong(UsefulMethod.getItemByName("defaultintercommandtimer", tab)),
+						Integer.parseInt(UsefulMethod.getItemByName("defaultintercommandtimer", tab)),
 						toSend));
 				}
 			catch (Exception e)
@@ -513,7 +514,7 @@ public class UsefulMethod
 	
 	public static KeyPressProfile getKeyPressProfile(String name) throws Exception
 		{
-		for(KeyPressProfile kpp : Variables.getKeyPressprofileList())
+		for(KeyPressProfile kpp : Variables.getKeyPressProfileList())
 			{
 			if(kpp.getName().equals(name))return kpp;
 			}
@@ -553,26 +554,6 @@ public class UsefulMethod
 		textToConvert = textToConvert.replaceAll("!", "%21");
 		
 		return textToConvert;
-		}
-	
-	/**
-	 * Will initialize the JTAPI connection
-	 */
-	public static JTAPIConnection initJTAPIConnection() throws Exception
-		{
-		if(Variables.getJtapiConnection() == null)
-			{
-			Variables.setJtapiConnection(new JTAPIConnection(UsefulMethod.getTargetOption("cucmip"),
-					UsefulMethod.getTargetOption("senduser"),
-					UsefulMethod.getTargetOption("sendpassword")));
-			
-			return Variables.getJtapiConnection();
-			}
-		else
-			{
-			Variables.getLogger().debug("JTAPI connection already up");
-			return Variables.getJtapiConnection();
-			}
 		}
 	
 	/**
@@ -714,6 +695,16 @@ public class UsefulMethod
 			Variables.setCUCMReachable(false);
 			throw e;
 			}
+		}
+	
+	public static JTAPILine getJTAPILine(String lineNumber) throws Exception
+		{
+		for(JTAPILine line : Variables.getLineList())
+			{
+			if(line.getLine().getName().equals(lineNumber))return line;
+			}
+		
+		throw new Exception("Line not found : "+lineNumber);
 		}
 	
 	

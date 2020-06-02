@@ -1,10 +1,7 @@
 package com.alex.phorkpe.jtapi;
 
-import javax.telephony.MethodNotSupportedException;
-import javax.telephony.ResourceUnavailableException;
 import javax.telephony.events.TermEv;
 
-import com.alex.phorkpe.misc.Device;
 import com.alex.phorkpe.utils.Variables;
 import com.cisco.jtapi.extensions.CiscoTermInServiceEv;
 import com.cisco.jtapi.extensions.CiscoTermOutOfServiceEv;
